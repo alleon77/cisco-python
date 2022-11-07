@@ -29,7 +29,7 @@ parser.add_argument('-uf', '--user-file', type=open,
 parser.add_argument('-t', '--type', choices=['iosxe', 'nxos', 'iosxr'], default='iosxe',
                     help='Type device, default value %(default)s')
 
-parser.add_argument('-n', '--notprint', action='store_false',
+parser.add_argument('-n', '--nodisplay', action='store_false',
                     help='do not display IP address and other additional information, only display the result')
 
 ## -------------------------------------------------------------------------- ##
@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-#    if ( args.notprint ):
+#    if ( args.nodisplay ):
 #        print (args) ## test print args 
     
     if ( args.user is None and args.user_file is None ):
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     elif ( args.user and args.password is None ):
         args.password=request_pass()
     elif ( args.user and args.password and args.user_file):
-        if ( args.notprint ): print ("Use login: %s" %args.user, ", ignore option -uf " )
+        if ( args.nodisplay): print ("Use login: %s" %args.user, ", ignore option -uf " )
     elif ( args.user_file ):
         print ()
         print ("Check login and password in file {}".format( args.user_file ))
@@ -116,12 +116,12 @@ if __name__ == '__main__':
 ##        print (showcommands)
 
         result = send_show(currentdevice, showcommands)
-        if ( args.notprint ):
+        if ( args.nodisplay ):
             print()
             print("Host: ",args.ip.strip("'"))
         for cmd, cmdresult in result.items():
             print()
-            if ( args.notprint ):
+            if ( args.nodisplay ):
                 print (cmd)
             print (cmdresult)
  
