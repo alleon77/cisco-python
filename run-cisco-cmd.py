@@ -122,7 +122,8 @@ if __name__ == '__main__':
         for cmd, cmdresult in result.items():
             print()
             if ( args.nodisplay ):
-                print (cmd)
+                print ("Show command: ",cmd)
+                print()
             print (cmdresult)
  
 
