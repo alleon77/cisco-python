@@ -1,17 +1,22 @@
+#!/usr/bin/python3
+# Program for execute show and configuration commands on cisco devices
+# run python3 <name.py> -h
+#
+
 import argparse
 import getpass
 from scrapli import Scrapli
 from scrapli.exceptions import ScrapliException
 
 
-parser = argparse.ArgumentParser(description='Program for running show and configuration commands on cisco devices')
+parser = argparse.ArgumentParser(description='Program for execute show and configuration commands on cisco devices')
 
 parser.add_argument('-i', '--ip', type=ascii, action='store',
                     help='IP address devices')
 parser.add_argument('-s', '--show', type=ascii, action='store',
-                    help='show command for devices example "show clock, show inventory"')
+                    help='show command for devices example "show clock; show inventory"')
 parser.add_argument('-c', '--command', type=ascii, action='store',
-                    help='configuration command for devices example "no ntp server 1.1.1.1, ntp server 2.2.2.2"')
+                    help='configuration command for devices example "no ntp server 1.1.1.1; ntp server 2.2.2.2"')
 parser.add_argument('-u', '--user', type=ascii, action='store',
                     help='login user for devices')
 parser.add_argument('-p', '--password', type=ascii, action='store',
@@ -76,15 +81,26 @@ def send_cfg(device, cfg_commands, strict=False):
     return output
 
 
-    
+def print_result (resultf):
+    if ( args.nodisplay ):
+        print()
+        print("Host: ",args.ip.strip("'"))
+    for cmd, cmdresult in resultf.items():
+        print()
+        if ( args.nodisplay ):
+            print ("Show command: ",cmd)
+            print()
+        print (cmdresult)
 
-## -------------------------------------------------------------------------- ##
+
 
 
 if __name__ == '__main__':
 
+## -------------------------------------------------------------------------- ##
+## Блок проверки аргументов командной строки
     args = parser.parse_args()
-
+        
 #    if ( args.nodisplay ):
 #        print (args) ## test print args 
     
@@ -111,11 +127,18 @@ if __name__ == '__main__':
            "ssh_config_file": False
          }
 
+
+## -------------------------------------------------------------------------- ##
+## Блок выполнения аргумента show 
+    
+
     if ( args.show ):
         showcommands = (args.show.strip("'|\"").split(";"))
 ##        print (showcommands)
 
         result = send_show(currentdevice, showcommands)
+        print_result (result)
+"""        
         if ( args.nodisplay ):
             print()
             print("Host: ",args.ip.strip("'"))
@@ -125,11 +148,17 @@ if __name__ == '__main__':
                 print ("Show command: ",cmd)
                 print()
             print (cmdresult)
+""" 
  
-
+## -------------------------------------------------------------------------- ##
+## Блок выполнения аргумента command
+    
+"""    
     if ( args.command ):
         confcommands = (args.command.strip("'|\"").split(";"))
-        print (confcommands) 
+##      print (confcommands) 
         
-        
-        
+        result = send_cfg(currentdevice, confcommands)
+        print_result (result)
+      
+"""       
