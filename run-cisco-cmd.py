@@ -69,15 +69,14 @@ def send_cfg(device, cfg_commands, strict=False):
     if type(cfg_commands) == str:
         cfg_commands = [cfg_commands]
     try:
-      with Scrapli(**device) as ssh:
-          reply = ssh.send_configs(cfg_commands, stop_on_failed=strict)
-          for cmd_reply in reply:
-              if cmd_reply.failed:
-                  print(f"При выполнении команды возникла ошибка:\n{reply.result}\n")
-          output = reply.result
+        with Scrapli(**device) as ssh:
+            reply = ssh.send_configs(cfg_commands, stop_on_failed=strict)
+            for cmd_reply in reply:
+                if cmd_reply.failed:
+                    print(f"При выполнении команды возникла ошибка:\n{reply.result}\n")
+            output = reply.result
     except ScrapliException as error:
         print(error, device["host"])
-
     return output
 
 
@@ -97,12 +96,12 @@ def print_result (resultf):
 
 if __name__ == '__main__':
 
-## -------------------------------------------------------------------------- ##
-## Блок проверки аргументов командной строки
+    ## -------------------------------------------------------------------------- ##
+    ## Блок проверки аргументов командной строки
     args = parser.parse_args()
         
-#    if ( args.nodisplay ):
-#        print (args) ## test print args 
+    #if ( args.nodisplay ):
+    #    print (args) ## test print args 
     
     if ( args.user is None and args.user_file is None ):
         args.user=request_user()
@@ -128,37 +127,23 @@ if __name__ == '__main__':
          }
 
 
-## -------------------------------------------------------------------------- ##
-## Блок выполнения аргумента show 
+    ## -------------------------------------------------------------------------- ##
+    ## Блок выполнения аргумента show 
     
 
     if ( args.show ):
         showcommands = (args.show.strip("'|\"").split(";"))
-##        print (showcommands)
-
         result = send_show(currentdevice, showcommands)
         print_result (result)
-"""        
-        if ( args.nodisplay ):
-            print()
-            print("Host: ",args.ip.strip("'"))
-        for cmd, cmdresult in result.items():
-            print()
-            if ( args.nodisplay ):
-                print ("Show command: ",cmd)
-                print()
-            print (cmdresult)
-""" 
- 
-## -------------------------------------------------------------------------- ##
-## Блок выполнения аргумента command
-    
-"""    
+
+    ## -------------------------------------------------------------------------- ##
+    ## Блок выполнения аргумента command
+
+
     if ( args.command ):
         confcommands = (args.command.strip("'|\"").split(";"))
-##      print (confcommands) 
-        
+        #print (confcommands) 
+
         result = send_cfg(currentdevice, confcommands)
-        print_result (result)
-      
-"""       
+        print (result)
+
